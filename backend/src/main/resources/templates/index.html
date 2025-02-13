@@ -15,5 +15,9 @@
 
     <h2 th:if="${extractedText}">Extracted Resume Text:</h2>
     <pre th:if="${extractedText}" th:text="${extractedText}"></pre>
+
+    <h2 th:if="${openAiResponse}"> OpenAI Scoring Response:</h2>
+    <pre th:if="${openAiResponse}" th:text ="${openAiResponse}"></pre>
+
 </body>
 </html>

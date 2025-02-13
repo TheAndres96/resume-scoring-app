@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.resumescorer.services.OpenAIService;
+
 
 @Controller
 public class MainController {
+
+    @Autowired
+    private OpenAIService openAIService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -36,9 +42,12 @@ public class MainController {
             String extractedText = tika.parseToString(inputStream);
             inputStream.close();
 
-            //Send extracted text to UI
+            String openAiResponse = openAIService.scoreResume(extractedText);
+
+            //Display results
             model.addAttribute("message","Resume uploaded successfully!");
             model.addAttribute("extractedText", extractedText);
+            model.addAttribute("openAiResponse", openAiResponse);
 
         } catch (IOException | TikaException e) {
             model.addAttribute("message", "Error uploading resume: " + e.getMessage());
